@@ -1,0 +1,58 @@
+server:
+  port: 8443
+  address: 0.0.0.0
+spring:
+#   application:
+#     name: system
+  datasource:
+    # driver-class-name: com.mysql.jdbc.Driver
+    # url: ${DATASOURCE_URL:jdbc:mysql://localhost:3306/test_jpa?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai}
+    url: ${DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres?useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai}
+    username: ${DATASOURCE_USERNAME:postgres}
+    password: ${DATASOURCE_PASSWORD:asdf;lkj123!@#}
+    # 连接池配置，Spring Boot 2.0以后默认使用 HikariCP 连接池，2.0以前默认使用的是 Tomcat 连接池
+    hikari:
+      pool-name: HikariPool
+      minimum-idle: 5
+      maximum-pool-size: 10
+      connection-timeout: 30000 # 数据库连接超时时间,默认30秒，即30000
+      idle-timeout: 600000 # 空闲连接存活最大时间，默认600000（10分钟）
+      max-lifetime: 1800000 # 此属性控制池中连接的最长生命周期，值0表示无限生命周期，默认1800000即30分钟
+
+#hibernate JPA
+  jpa:
+    # database: MYSQL
+    database: postgresql
+    #配置是否自动创建数据库表
+    generate-ddl: true
+    #设置为true：Spring Boot整合JPA后Hibernate的Session就交付给Spring去管理。每次数据库操作后，会关闭Session，当我们想要用懒加载方式去获得数据的时候，原来的Session已经关闭，不能获取数据
+    #设置为false：防止hibernate的session外延到controller
+    open-in-view: true
+    #显示sql语句
+    show-sql: true
+    hibernate:
+    #在springboot项目中使用springdata Jpa，并且希望当我的实体类发生了更改，数据库表结构随着实体类的改变而自动做出相应的改变。  
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true #格式化sql
+        # dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        dialect: org.hibernate.dialect.PostgreSQL9Dialect
+        current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+        enable_lazy_load_no_trans: true # 开启懒加载,不开启在实体类中使用 FetchType.LAZY 会报错
+
+  redis:
+    host: ${REDIS_HOST:10.91.3.119} # Redis服务器地址
+    database: ${REDIS_DATABASE:0} # Redis数据库索引（默认为0）
+    port: ${REDIS_PORT:6380} # Redis服务器连接端口
+    password: ${REDIS_PASSWORD:dfe69c50663c425334d06f940ded0e31}  # Redis服务器连接密码（默认为空）
+    timeout: 3000ms # 连接超时时间（毫秒）
+
+# 显示jpq的sql参数
+logging:
+  level:
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
+
+redisCahe:
+  expireTime: 3600 # redis的默认存储时长（秒）
+  generatePre: cache # 该服务缓存在redis中的通用前缀
