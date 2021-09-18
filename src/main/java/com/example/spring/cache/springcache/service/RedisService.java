@@ -22,14 +22,14 @@ public class RedisService {
     @Autowired
     private EmployeeDao employeeDao;
 
-    @Cacheable(key = "#id")
+    @Cacheable(key = "#id", unless = "#result == null ")
     public Optional<Employee> findEmployeeById(Long id) {
         Optional<Employee> optional = employeeDao.findById(id);
-        optional.get().setDepartment(null);
+        // optional.get().setDepartment(null);
         return optional;
     }
 
-    @Cacheable(key = "#root.methodName")
+    @Cacheable(key = "#root.methodName", unless = "#result == null ")
     public Department findByDeptNameQ(String name) {
         return departmentDao.findByDeptNameQ(name);
     }

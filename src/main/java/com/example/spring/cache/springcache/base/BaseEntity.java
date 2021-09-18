@@ -1,7 +1,7 @@
 package com.example.spring.cache.springcache.base;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -9,17 +9,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 @MappedSuperclass
-@Getter
-@Setter
+@Data
+// 解决子类的用注解创建构造时，找不到父类的属性
+// @SuperBuilder 
 public class BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -32,14 +30,16 @@ public class BaseEntity implements Serializable {
 
     // @Column(columnDefinition = "datetime comment '创建时间'")
     @Column()
-    @CreatedDate
+    // @CreatedDate（pg不能用）
+    @CreationTimestamp
     // 指定json序列化时的格式,所以从controller响应出json格式时,该字段的格式能如下指定
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date createdDate;
+    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalTime createdDate;
 
     // @Column(columnDefinition = "datetime comment '更新时间'")
     @Column()
-    @LastModifiedDate
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date lastUpdatedDate;
+    // @LastModifiedDate（pg不能用）
+    @UpdateTimestamp
+    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private LocalTime lastUpdatedDate;
 }

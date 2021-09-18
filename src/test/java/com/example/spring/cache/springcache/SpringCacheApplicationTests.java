@@ -49,9 +49,9 @@ class SpringCacheApplicationTests {
      */
     @Test
     public void testDepartmentAdd() {
-        // Department department = new Department();
-        // department.setDeptName("市场部");
-        // departmentDao.save(department);
+        Department department = new Department();
+        department.setDeptName("市场部");
+        departmentDao.save(department);
     }
 
     /**
@@ -62,7 +62,6 @@ class SpringCacheApplicationTests {
         Employee employee = new Employee();
         employee.setEmpName("非法");
         employee.setEmpJob("地革");
-
         Department department = departmentDao.findByDeptName("市场部");
         if (department == null) {
             System.out.println("部门id不存在");
@@ -89,8 +88,11 @@ class SpringCacheApplicationTests {
      */
     @Test
     public void testFindEmployeeById() {
-        Optional<Employee> employeeOptional = redisService.findEmployeeById(2L);
-
+        Optional<Employee> employeeOptional = redisService.findEmployeeById(1L);
+        if (!employeeOptional.isPresent()) {
+            System.out.println("没有数据");
+            return;
+        }
         System.out.println("员工:" + employeeOptional.get());
         System.out.println("所属部门:" + employeeOptional.get().getDepartment());// 懒加载
     }
